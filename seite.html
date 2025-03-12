@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Post-Workout Meal Suggestion</title>
+<style>
+  body {
+    font-family: sans-serif;
+  }
+  .container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  .meal-suggestion {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  button {
+        padding: 10px 15px;
+        background-color: #4CAF50; /* Green */
+        border: none;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin-top: 10px;
+        cursor: pointer;
+        border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Post-Workout Meal Suggestion</h1>
+
+  <p>Select your workout type to get a personalized meal suggestion:</p>
+
+  <select id="workoutType">
+    <option value="weightLifting">Weight Lifting</option>
+    <option value="swimming">Swimming</option>
+    <option value="biking">Biking</option>
+    <option value="running">Running</option>
+  </select>
+
+  <button onclick="generateMealSuggestion()">Get Meal Suggestion</button>
+
+  <div class="meal-suggestion" id="mealOutput">
+    </div>
+</div>
+
+<script>
+const availableIngredients = [
+    "eggs", "tofu", "salmon", "lentils", "red beans", "black beans",
+    "walnuts", "pecans", "whole grain pasta", "potatoes", "whole grain bread",
+    "sweet potatoes", "bananas", "apples", "spinach", "onions", "broccoli",
+    "peanut butter", "brown rice", "spelt bran", "avocados", "feta cheese",
+    "oat milk", "lemon juice", "mushrooms", "quinoa", "millet", "bulgur"
+];
+
+function getRandomSubarray(arr, size) {
+    let shuffled = arr.slice(0), i = arr.length, min = i - size, temp, index;
+    while (i-- > min) {
+        index = Math.floor((i + 1) * Math.random());
+        temp = shuffled[index];
+        shuffled[index] = shuffled[i];
+        shuffled[i] = temp;
+    }
+    return shuffled.slice(min);
+}
+
+function generateMeal(workoutType) {
+    let meal = {
+        protein: "",
+        carbs: "",
+        fats: "",
+        produce: "",
+    };
+
+    //Higher protein for weightlifting, more balanced for others
+    if (workoutType === "weightLifting") {
+        meal.protein = getRandomSubarray([ "eggs", "tofu", "salmon", "lentils", "red beans", "black beans"], Math.floor(Math.random() * 2) + 1).join(", ");  // 1-2 protein sources
+        meal.carbs = getRandomSubarray(["whole grain pasta", "potatoes", "whole grain bread", "sweet potatoes", "brown rice", "quinoa", "millet", "bulgur"], Math.floor(Math.random() * 2) + 1).join(", "); // 1-2 carb sources
+        meal.fats = getRandomSubarray(["walnuts", "pecans", "peanut butter", "avocados"], 1).join(", "); // 1 fat source
+        meal.produce = getRandomSubarray(["bananas", "apples", "spinach", "onions", "broccoli",  "mushrooms"], Math.floor(Math.random() * 3) + 1).join(", "); // 1-3 produce
+
+    } else if (workoutType === "swimming" || workoutType === "biking" || workoutType === "running") {
+        meal.protein = getRandomSubarray([ "eggs", "tofu", "salmon", "lentils", "red beans", "black beans"], 1).join(", "); // 1 protein
+        meal.carbs = getRandomSubarray(["whole grain pasta", "potatoes", "whole grain bread", "sweet potatoes", "brown rice", "quinoa", "millet", "bulgur"], Math.floor(Math.random()*2) + 1).join(", "); // 1-2 carbs.
+        meal.fats = getRandomSubarray(["walnuts", "pecans", "peanut butter", "avocados", "feta cheese"], 1).join(", "); // 1 fat.
+        meal.produce = getRandomSubarray(["bananas", "apples", "spinach", "onions", "broccoli", "mushrooms"], Math.floor(Math.random()*2) + 2).join(", ");//2-3 produce.
+    }
+
+
+    return meal;
+}
+
+function createMealSuggestion(meal, workoutType) {
+    let suggestion = "";
+
+    if (workoutType === "weightLifting") {
+        suggestion += "<strong>High-Protein Recovery Meal:</strong><br>";
+        suggestion += `Scrambled ${meal.protein} with sauteed ${meal.produce}.  Serve with a side of ${meal.carbs} and top with ${meal.fats}.<br>`;
+
+         //Another Weightlifting suggestion
+        if (Math.random() < 0.5) { //50% chance of different meal
+             suggestion = `<strong>Muscle Building Bowl:</strong><br>`;
+             suggestion += `Combine ${meal.carbs} with ${meal.protein}, ${meal.produce}, and  ${meal.fats}.  Consider adding a drizzle of lemon juice for flavor.<br>`;
+         }
+    }
+    else if(workoutType === "swimming"){
+      suggestion += "<strong>Post-Swim Replenishment:</strong><br>";
+      suggestion += `Prepare a ${meal.protein} salad sandwich on ${meal.carbs} (if bread was selected) or in a bowl with chopped ${meal.produce} and ${meal.fats}.<br>`;
+
+        if (Math.random() < 0.5) {
+          suggestion = "<strong>Energy Boosting Wrap:</strong><br>";
+          suggestion += `Fill a whole grain wrap (if you have one, otherwise use ${meal.carbs}) with ${meal.protein}, ${meal.produce}, and a smear of ${meal.fats}.<br>`;
+      }
+    }
+
+     else if (workoutType === "biking") {
+        suggestion += "<strong>Cyclist's Refuel:</strong><br>";
+        suggestion += `Cook ${meal.carbs} and toss with ${meal.protein}, ${meal.produce}, and some crumbled ${meal.fats} (if feta, otherwise sliced/chopped).<br>`;
+
+          //Another option
+          if (Math.random() < 0.5) {
+               suggestion = "<strong>Quick Bike Recovery Meal</strong><br>";
+               suggestion += `Toast ${meal.carbs} (if bread chosen, otherwise, warm the carb source).  Top with ${meal.protein}, ${meal.fats} and a side of ${meal.produce}.<br>`;
+          }
+
+    } else if (workoutType === "running") {
+        suggestion += "<strong>Runner's Recovery Meal:</strong><br>";
+        suggestion += `Make a hearty salad with ${meal.produce} as the base.  Add ${meal.protein}, ${meal.carbs}, and top with ${meal.fats}.<br>`;
+
+         // Another Running Option
+        if (Math.random() < 0.5){
+          suggestion = "<strong>Post-Run Energy Bowl:</strong><br>"
+          suggestion += `Combine warm ${meal.carbs} with ${meal.protein}. Stir in  ${meal.produce} and ${meal.fats}.<br>`;
+        }
+    }
+
+
+    return suggestion;
+}
+
+
+
+function generateMealSuggestion() {
+  const workoutType = document.getElementById("workoutType").value;
+  const meal = generateMeal(workoutType);
+  const mealSuggestion = createMealSuggestion(meal, workoutType);
+  document.getElementById("mealOutput").innerHTML = mealSuggestion;
+}
+</script>
+
+</body>
+</html>
